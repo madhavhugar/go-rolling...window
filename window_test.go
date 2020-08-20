@@ -31,6 +31,7 @@ func cleanUp(rw *RollingWindow) {
 }
 
 func Test_garbageCollectOlderTimestamps(t *testing.T) {
+	// should remove unrelevant requests from the Window
 	now := time.Now()
 	rollingWin := setUp(now)
 
@@ -45,15 +46,6 @@ func Test_garbageCollectOlderTimestamps(t *testing.T) {
 
 	cleanUp(&rollingWin)
 }
-
-// func Test_getLatestRequest(t *testing.T) {
-// 	now := time.Now()
-// 	rollingWin := setUp(now)
-// 	expected := now.Add(-10 * time.Second)
-
-// 	got := rollingWin.getLatestRequest()
-// 	assert.Equal(t, expected, got)
-// }
 
 func Test_isTimeStampWithinWindow(t *testing.T) {
 	now := time.Now()
@@ -136,6 +128,7 @@ func Test_appendRequestToLog(t *testing.T) {
 }
 
 func Test_computeWindowBoundary(t *testing.T) {
+	// should compute a left boundary of a window
 	now := time.Now()
 	rollingWin := RollingWindow{
 		&Window{},
@@ -150,6 +143,7 @@ func Test_computeWindowBoundary(t *testing.T) {
 }
 
 func Test_addRequestToWindow(t *testing.T) {
+	// should add request to the window
 	now := time.Now()
 	rollingWin := setUp(now)
 	expected := now.Add(-10 * time.Second)
