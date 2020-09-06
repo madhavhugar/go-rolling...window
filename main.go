@@ -9,6 +9,7 @@ import (
 
 var rollingWin RollingWindow
 var mutex sync.Mutex
+var sliceRollingWindow *RollingWindowSlice
 
 func main() {
 	logFile := LogFile{
@@ -23,8 +24,11 @@ func main() {
 	}
 	loadRollingWindowFromFile(&rollingWin)
 
+	sliceRollingWindow = NewRollingWindowSlice(60)
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", cardinality(&rollingWin))
+	mux.HandleFunc("/cardinality", cardinalityUsingAbstractedSlice(sliceRollingWindow))
 
 	serverAddress := "0.0.0.0:9090"
 	fmt.Println("Starting server at", serverAddress)

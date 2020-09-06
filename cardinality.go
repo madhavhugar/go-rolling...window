@@ -32,3 +32,19 @@ func cardinality(rw *RollingWindow) http.HandlerFunc {
 		handleOnError(err, "on encoding response")
 	}
 }
+
+func cardinalityUsingAbstractedSlice(rw RollingWindowDataStructure) http.HandlerFunc {
+	return func(res http.ResponseWriter, req *http.Request) {
+
+		mutex.Lock()
+		now := time.Now()
+		rw.AppendRequest(now)
+		mutex.Unlock()
+
+		count := rw.GetCount()
+		fmt.Println("Route => /cardinality Method => ", req.Method, "Count => ", count)
+		resPayload := Response{count}
+		err := json.NewEncoder(res).Encode(&resPayload)
+		handleOnError(err, "on encoding response")
+	}
+}
